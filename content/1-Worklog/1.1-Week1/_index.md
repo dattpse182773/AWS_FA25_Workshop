@@ -5,24 +5,26 @@ weight: 1
 chapter: false
 pre: " <b> 1.1. </b> "
 ---
-{{% notice warning %}} 
+<!-- {{% notice warning %}} 
 ⚠️ **Note:** The following information is for reference purposes only. Please **do not copy verbatim** for your own report, including this warning.
-{{% /notice %}}
+{{% /notice %}} -->
 
 
 ### Week 1 Objectives:
 
 * Connect and get acquainted with members of First Cloud Journey.
 * Understand basic AWS services, how to use the console & CLI.
+* Understand and connect EC2, RDS.
 
 ### Tasks to be carried out this week:
 | Day | Task                                                                                                                                                                                                   | Start Date | Completion Date | Reference Material                        |
 | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | --------------- | ----------------------------------------- |
-| 2   | - Get acquainted with FCJ members <br> - Read and take note of internship unit rules and regulations                                                                                                   | 09/08/2025 | 09/08/2025      |
-| 3   | - Overview of AWS and AWS Services <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp;  <br>                                              | 09/09/2025 | 09/09/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 4   | - Create AWS Free Tier account <br> - Learn about AWS Console & AWS CLI <br> - **Practice:** <br>&emsp; + Create AWS account <br>&emsp; + Install & configure AWS CLI <br> &emsp; + How to use AWS CLI <br> &emsp; + Fix the error with Mr. Thinh in lab VPC flow logs section <br> &emsp; | 09/10/2025 | 09/10/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 5   | - Learn basic EC2: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - SSH connection methods to EC2 <br> - Learn about Elastic IP   <br>                            | 09/11/2025 | 09/11/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 6   | - **Practice:** <br>&emsp; + Launch an EC2 instance <br>&emsp; + Connect via SSH <br>&emsp; + Attach an EBS volume                                                                                     | 09/12/2025 | 09/12/2025      | <https://cloudjourney.awsstudygroup.com/> |
+| 2   | - Get to know FCJ members <br> - Read and take note of the rules and regulations at the internship unit                                                                 | 08/09/2025   | 08/09/2025      |
+| 3   | - Learn about AWS and its service categories <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp;  <br> - Create an AWS account <br>&emsp; + Set up MFA <br>&emsp; + Create AdminGroup and AdminUser <br>&emsp; + Verify the account <br>&emsp; + Explore and configure AWS Management Console <br>&emsp;<br>                                             | 09/09/2025   | 09/09/2025      | <https://cloudjourney.awsstudygroup.com/> |
+| 4   | - Learn about Amazon Virtual Private Cloud (VPC) and AWS Site-to-Site VPN <br>  - **Practice:** <br>&emsp; + Understand VPC firewall concepts and preparation steps <br>&emsp;  + Debug VPC flow logs lab with Mr. Thịnh <br>&emsp; + Deploy an Amazon EC2 Instance <br>&emsp; + Configure Site-to-Site VPN| 10/09/2025   | 10/09/2025      | <https://cloudjourney.awsstudygroup.com/> |
+| 5   | - Continue learning about EC2: <br> - **Practice:** <br>&emsp; + Launch a Windows instance <br>&emsp; + Launch a Linux instance <br>&emsp; + Hands-on with Amazon EC2 <br>&emsp; + Deploy Node.js on Amazon Linux <br>&emsp; + Run a Node.js app on Amazon EC2 Windows <br>&emsp; + Learn about resource usage limits with IAM service <br>&emsp;                 | 11/09/2025   | 11/09/2025      | <https://cloudjourney.awsstudygroup.com/> |
+| 6   | - Learn about Amazon Relational Database Service (Amazon RDS) <br> - **Practice:** <br>&emsp; + Create an EC2 instance <br>&emsp; + Create an RDS instance <br>&emsp; + Deploy an application <br>&emsp; + Backup and restore <br>&emsp;                                                                                      | 12/09/2025   | 12/09/2025      | <https://cloudjourney.awsstudygroup.com/> |
+
 
 
 ### Week 1 Achievements:
@@ -54,4 +56,18 @@ pre: " <b> 1.1. </b> "
   
 
 * Acquired the ability to connect between the web interface and CLI to manage AWS resources in parallel.
+
+* Understanding the basics of EC2:
+
+  * Understand how to create and manage virtual servers on the cloud.
+  * Learn how to connect via SSH/RDP to work directly with the server.
+  * Install and deploy web applications (Node.js) on EC2.
+  * Manage security, firewalls (Security Groups), and static IPs (Elastic IP).
+  * Learn how to optimize cloud costs (choose the right instance type, start/stop at the right time).
+
+* Amazon RDS provides the following key benefits:
+
+  * An easy replacement for traditional database instances.
+  * Automated backups and patching within a customer-defined maintenance window.
+  * Scaling, replication, and high availability with just one click.
 
