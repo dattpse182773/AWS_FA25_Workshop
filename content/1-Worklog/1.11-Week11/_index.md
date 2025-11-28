@@ -1,13 +1,14 @@
+
 ---
 title: "Week 11 Worklog"
-date: 2025-09-10
+date: 2025-09-16
 weight: 2
 chapter: false
 pre: " <b> 1.11. </b> "
 ---
-{{% notice warning %}} 
+<!-- {{% notice warning %}} 
 ⚠️ **Note:** The following information is for reference purposes only. Please **do not copy verbatim** for your own report, including this warning.
-{{% /notice %}}
+{{% /notice %}} -->
 
 
 ### Week 11 Objectives:

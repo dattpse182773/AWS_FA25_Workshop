@@ -1,59 +1,46 @@
+
 ---
 title: "Worklog Tuần 2"
-date: 2025-09-10
+date: 2025-09-16
 weight: 1
 chapter: false
 pre: " <b> 1.2. </b> "
 ---
-{{% notice warning %}}
+<!-- {{% notice warning %}}
 ⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
+{{% /notice %}} -->
 
 
 ### Mục tiêu tuần 2:
 
-* Kết nối, làm quen với các thành viên trong First Cloud Journey.
-* Hiểu dịch vụ AWS cơ bản, cách dùng console & CLI.
+* Tìm hiểu về dịch vụ mạng AWS.
+* Tìm hiểu lý thuyết và thực hành EC2 cơ bản.
 
 ### Các công việc cần triển khai trong tuần này:
 | Thứ | Công việc                                                                                                                                                                                   | Ngày bắt đầu | Ngày hoàn thành | Nguồn tài liệu                            |
 | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | --------------- | ----------------------------------------- |
-| 2   | - Làm quen với các thành viên FCJ <br> - Đọc và lưu ý các nội quy, quy định tại đơn vị thực tập                                                                                             | 11/08/2025   | 11/08/2025      |
-| 3   | - Tìm hiểu AWS và các loại dịch vụ <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp; + ... <br>                                            | 12/08/2025   | 12/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 4   | - Tạo AWS Free Tier account <br> - Tìm hiểu AWS Console & AWS CLI <br> - **Thực hành:** <br>&emsp; + Tạo AWS account <br>&emsp; + Cài AWS CLI & cấu hình <br> &emsp; + Cách sử dụng AWS CLI | 13/08/2025   | 13/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 5   | - Tìm hiểu EC2 cơ bản: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - Các cách remote SSH vào EC2 <br> - Tìm hiểu Elastic IP   <br>                  | 14/08/2025   | 15/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 6   | - **Thực hành:** <br>&emsp; + Tạo EC2 instance <br>&emsp; + Kết nối SSH <br>&emsp; + Gắn EBS volume                                                                                         | 15/08/2025   | 15/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
+| 2   | - Tìm hiểu lý thuyết EC2 cơ bản: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br> - Các cách remote SSH vào EC2. <br> - Tìm hiểu Elastic IP. <br> - **Thực hành:** <br>&emsp; + Tạo EC2 instance <br>&emsp; + Kết nối SSH <br>&emsp;                                                                                              | 14/09/2025   | 14/09/2025      | <https://000004.awsstudygroup.com/vi>
+| 3   | - Tìm hiểu về dịch vụ mạng AWS <br>&emsp; + Amazon Virtual Private Cloud ( VPC ) <br>&emsp; + VPC Peering & Transit Gateway <br>&emsp; + VPN & Direct Connect <br>&emsp; + Elastic Load Balancing <br>&emsp; <br>                                            | 15/09/2025   | 17/09/2025      | <https://www.youtube.com/watch?v=O9Ac_vGHquM&list=PLahN4TLWtox2a3vElknwzU_urND8hLn1i&index=25> |
+| 4   | - Tìm hiểu về dịch vụ mạng AWS <br>&emsp; + Amazon Virtual Private Cloud ( VPC ) <br>&emsp; + VPC Peering & Transit Gateway <br>&emsp; + VPN & Direct Connect <br>&emsp; + Elastic Load Balancing <br>&emsp; <br> | 15/09/2025   | 17/09/2025      | <https://000003.awsstudygroup.com/vi> |
+| 5   | - **Thực hành:** <br>&emsp; + Cấu hình Site to Site VPN ( VPC ) <br>&emsp; + Triển khai Amazon EC2 Instance <br>&emsp;  <br>                                                                                                 | 16/09/2025   | 17/09/2025      | <https://000003.awsstudygroup.com/vi/1-introduce> |
+| 6   | -  Họp nhóm về ý tưởng project và viết worklog                                                                                        | 18/09/2025   | 18/09/2025      |  
 
 
 ### Kết quả đạt được tuần 2:
 
-* Hiểu AWS là gì và nắm được các nhóm dịch vụ cơ bản: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
+* Tìm hiểu lý thuyết EC2 cơ bản: 
+  * Instance types: các cấu hình phần cứng ảo khác nhau mà AWS cung cấp để chạy máy ảo (EC2 instance). Mỗi loại được tối ưu cho những nhu cầu sử dụng khác nhau
+  * AMI: bản mẫu để khởi tạo EC2 instance, gồm hệ điều hành, phần mềm, cấu hình volume.
+  * Các cách remote SSH vào EC2: dùng SSH Client với key pair, EC2 Instance Connect qua trình duyệt, Session Manager không cần mở port 22, và PuTTY trên Windows với file .ppk.
+  * Tìm hiểu Elastic IP: là một địa chỉ IPv4 tĩnh, cố định, công cộng được gán cho tài khoản AWS và có thể gắn/dỡ cho các EC2 instance, giúp EC2 có địa chỉ IP công cộng cố định, đảm bảo truy cập ổn định từ bên ngoài.
+  
+* Đã tạo và Kết nối SSH vào EC2 thành công.
 
-* Đã tạo và cấu hình AWS Free Tier account thành công.
+* Tìm hiểu về dịch vụ mạng AWS:
+  * Amazon Virtual Private Cloud: là dịch vụ mạng ảo tùy chỉnh nằm trong AWS Cloud, cho phép bạn tạo một môi trường mạng riêng biệt và hoàn toàn tách biệt với thế giới bên ngoài
+  * VPC Peering & Transit Gateway: VPC Peering kết nối trực tiếp hai VPC bằng IP private, đơn giản nhưng không hỗ trợ định tuyến bắc cầu, còn Transit Gateway là trung tâm kết nối nhiều VPC và on-premises, hỗ trợ định tuyến bắc cầu, mở rộng và quản lý tập trung.
+  * VPN & Direct Connect: VPN kết nối mạng on-premises với AWS qua Internet bằng đường hầm mã hóa, dễ triển khai nhưng độ trễ và băng thông phụ thuộc Internet; Direct Connect kết nối chuyên dụng từ on-premises đến AWS, ổn định, băng thông cao, độ trễ thấp nhưng chi phí cao và triển khai lâu hơn.
+  * Elastic Load Balancing: là dịch vụ phân phối tự động lưu lượng đến nhiều tài nguyên để tăng tính sẵn sàng, mở rộng và chịu lỗi, gồm ALB (HTTP/HTTPS), NLB (TCP/UDP hiệu năng cao) và GWLB (thiết bị mạng ảo).
 
-* Làm quen với AWS Management Console và biết cách tìm, truy cập, sử dụng dịch vụ từ giao diện web.
-
-* Cài đặt và cấu hình AWS CLI trên máy tính bao gồm:
-  * Access Key
-  * Secret Key
-  * Region mặc định
-  * ...
-
-* Sử dụng AWS CLI để thực hiện các thao tác cơ bản như:
-
-  * Kiểm tra thông tin tài khoản & cấu hình
-  * Lấy danh sách region
-  * Xem dịch vụ EC2
-  * Tạo và quản lý key pair
-  * Kiểm tra thông tin dịch vụ đang chạy
-  * ...
-
-* Có khả năng kết nối giữa giao diện web và CLI để quản lý tài nguyên AWS song song.
-* ...
 
 
