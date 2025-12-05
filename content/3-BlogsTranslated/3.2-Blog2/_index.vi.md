@@ -6,122 +6,67 @@ chapter: false
 pre: " <b> 3.2. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
+# Giới thiệu Skills Profile – Cách mới để thể hiện thành tựu AWS của bạn
 
-# Bắt đầu với healthcare data lakes: Sử dụng microservices
+Đối với những người học muốn trình bày hành trình AWS của mình một cách tự tin và chuyên nghiệp, **AWS Skill Builder** nay cung cấp **Skills Profile** — một phương thức mạnh mẽ để làm nổi bật các chứng chỉ AWS đã được xác thực, những thành tựu học tập và các huy hiệu đạt được, tất cả trong một hồ sơ có thể chia sẻ dễ dàng. Với khả năng tùy chỉnh nội dung hiển thị, Skills Profile giúp bạn kể câu chuyện kỹ năng điện toán đám mây của chính mình, đồng thời nâng cao mức độ tin cậy và sự hiện diện trong ngành.
 
-Các data lake có thể giúp các bệnh viện và cơ sở y tế chuyển dữ liệu thành những thông tin chi tiết về doanh nghiệp và duy trì hoạt động kinh doanh liên tục, đồng thời bảo vệ quyền riêng tư của bệnh nhân. **Data lake** là một kho lưu trữ tập trung, được quản lý và bảo mật để lưu trữ tất cả dữ liệu của bạn, cả ở dạng ban đầu và đã xử lý để phân tích. data lake cho phép bạn chia nhỏ các kho chứa dữ liệu và kết hợp các loại phân tích khác nhau để có được thông tin chi tiết và đưa ra các quyết định kinh doanh tốt hơn.
+Skills Profile dành cho những người dùng đã đăng nhập vào Skill Builder, cung cấp một không gian tập trung và đáng tin cậy để giới thiệu các thành tựu AWS của bạn. Dù bạn là người mới bắt đầu với AWS hay là một chuyên gia đã có kinh nghiệm, Skills Profile sẽ trở thành **hồ sơ kỹ năng AWS** của riêng bạn — sẵn sàng chia sẻ lên LinkedIn, trong hồ sơ xin việc, hoặc với đồng nghiệp và nhà tuyển dụng.
 
-Bài đăng trên blog này là một phần của loạt bài lớn hơn về việc bắt đầu cài đặt data lake dành cho lĩnh vực y tế. Trong bài đăng blog cuối cùng của tôi trong loạt bài, *“Bắt đầu với data lake dành cho lĩnh vực y tế: Đào sâu vào Amazon Cognito”*, tôi tập trung vào các chi tiết cụ thể của việc sử dụng Amazon Cognito và Attribute Based Access Control (ABAC) để xác thực và ủy quyền người dùng trong giải pháp data lake y tế. Trong blog này, tôi trình bày chi tiết cách giải pháp đã phát triển ở cấp độ cơ bản, bao gồm các quyết định thiết kế mà tôi đã đưa ra và các tính năng bổ sung được sử dụng. Bạn có thể truy cập các code samples cho giải pháp tại Git repo này để tham khảo.
-
----
-
-## Hướng dẫn kiến trúc
-
-Thay đổi chính kể từ lần trình bày cuối cùng của kiến trúc tổng thể là việc tách dịch vụ đơn lẻ thành một tập hợp các dịch vụ nhỏ để cải thiện khả năng bảo trì và tính linh hoạt. Việc tích hợp một lượng lớn dữ liệu y tế khác nhau thường yêu cầu các trình kết nối chuyên biệt cho từng định dạng; bằng cách giữ chúng được đóng gói riêng biệt với microservices, chúng ta có thể thêm, xóa và sửa đổi từng trình kết nối mà không ảnh hưởng đến những kết nối khác. Các microservices được kết nối rời thông qua tin nhắn publish/subscribe tập trung trong cái mà tôi gọi là “pub/sub hub”.
-
-Giải pháp này đại diện cho những gì tôi sẽ coi là một lần lặp nước rút hợp lý khác từ last post của tôi. Phạm vi vẫn được giới hạn trong việc nhập và phân tích cú pháp đơn giản của các **HL7v2 messages** được định dạng theo **Quy tắc mã hóa 7 (ER7)** thông qua giao diện REST.
-
-**Kiến trúc giải pháp bây giờ như sau:**
-
-> *Hình 1. Kiến trúc tổng thể; những ô màu thể hiện những dịch vụ riêng biệt.*
+> “Skills Profile giúp tôi dễ dàng thể hiện hành trình học AWS và những kỹ năng tôi đã phát triển. Tôi có thể chia sẻ chứng chỉ và các cột mốc học tập của mình trong một định dạng gọn gàng, chuyên nghiệp — không cần ảnh chụp màn hình hay các liên kết rời rạc.”  
+> – Một người học AWS Skill Builder
 
 ---
 
-Mặc dù thuật ngữ *microservices* có một số sự mơ hồ cố hữu, một số đặc điểm là chung:  
-- Chúng nhỏ, tự chủ, kết hợp rời rạc  
-- Có thể tái sử dụng, giao tiếp thông qua giao diện được xác định rõ  
-- Chuyên biệt để giải quyết một việc  
-- Thường được triển khai trong **event-driven architecture**
+## Từ học tập đến công nhận chuyên nghiệp
 
-Khi xác định vị trí tạo ranh giới giữa các microservices, cần cân nhắc:  
-- **Nội tại**: công nghệ được sử dụng, hiệu suất, độ tin cậy, khả năng mở rộng  
-- **Bên ngoài**: chức năng phụ thuộc, tần suất thay đổi, khả năng tái sử dụng  
-- **Con người**: quyền sở hữu nhóm, quản lý *cognitive load*
+Khi hành vi học tập cộng đồng trên các nền tảng chuyên môn ngày càng phát triển, việc thể hiện kỹ năng một cách rõ ràng và đáng tin cậy trở nên cần thiết hơn bao giờ hết. Skills Profile giúp thu hẹp khoảng cách giữa dữ liệu học tập cá nhân (private) và sự công nhận chuyên môn (public).
 
----
+Trong khi **Learner Dashboard** của bạn vẫn ở chế độ riêng tư, **Skills Profile** được thiết kế để chia sẻ công khai và hiển thị:
 
-## Lựa chọn công nghệ và phạm vi giao tiếp
+- Các chứng chỉ AWS  
+- Thành tựu học tập trên Skill Builder  
+- Huy hiệu Cloud Quest  
+- Các cột mốc đã được xác thực khác  
 
-| Phạm vi giao tiếp                        | Các công nghệ / mô hình cần xem xét                                                        |
-| ---------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Trong một microservice                   | Amazon Simple Queue Service (Amazon SQS), AWS Step Functions                               |
-| Giữa các microservices trong một dịch vụ | AWS CloudFormation cross-stack references, Amazon Simple Notification Service (Amazon SNS) |
-| Giữa các dịch vụ                         | Amazon EventBridge, AWS Cloud Map, Amazon API Gateway                                      |
+Bạn có toàn quyền lựa chọn nội dung sẽ hiển thị, giúp hồ sơ phản ánh chính xác câu chuyện bạn muốn chia sẻ với mạng lưới chuyên môn của mình.
 
 ---
 
-## The pub/sub hub
+## Kết nối cơ hội thông qua kỹ năng được chia sẻ
 
-Việc sử dụng kiến trúc **hub-and-spoke** (hay message broker) hoạt động tốt với một số lượng nhỏ các microservices liên quan chặt chẽ.  
-- Mỗi microservice chỉ phụ thuộc vào *hub*  
-- Kết nối giữa các microservice chỉ giới hạn ở nội dung của message được xuất  
-- Giảm số lượng synchronous calls vì pub/sub là *push* không đồng bộ một chiều
+Skills Profile mang lại giá trị mới cho cả cá nhân và tổ chức bằng cách làm cho kỹ năng đám mây trở nên **dễ nhìn thấy**, **dễ chia sẻ**, và **dễ xác minh**.
 
-Nhược điểm: cần **phối hợp và giám sát** để tránh microservice xử lý nhầm message.
+Khi bạn chia sẻ các thành tựu AWS của mình, bạn mở ra cơ hội cho:
 
----
+- Kết nối chuyên môn  
+- Hợp tác dự án  
+- Phát triển sự nghiệp  
 
-## Core microservice
+Đối với tổ chức và nhà tuyển dụng, Skills Profile cung cấp một nguồn thông tin đáng tin cậy để:
 
-Cung cấp dữ liệu nền tảng và lớp truyền thông, gồm:  
-- **Amazon S3** bucket cho dữ liệu  
-- **Amazon DynamoDB** cho danh mục dữ liệu  
-- **AWS Lambda** để ghi message vào data lake và danh mục  
-- **Amazon SNS** topic làm *hub*  
-- **Amazon S3** bucket cho artifacts như mã Lambda
+- Tìm kiếm nhân tài có kỹ năng AWS  
+- Xác thực năng lực chuyên môn  
+- Gắn kết vai trò công việc với kỹ năng AWS phù hợp  
 
-> Chỉ cho phép truy cập ghi gián tiếp vào data lake qua hàm Lambda → đảm bảo nhất quán.
+Trong tương lai, Skills Profile sẽ tiếp tục mở rộng, bao gồm:
 
----
-
-## Front door microservice
-
-- Cung cấp API Gateway để tương tác REST bên ngoài  
-- Xác thực & ủy quyền dựa trên **OIDC** thông qua **Amazon Cognito**  
-- Cơ chế *deduplication* tự quản lý bằng DynamoDB thay vì SNS FIFO vì:
-  1. SNS deduplication TTL chỉ 5 phút
-  2. SNS FIFO yêu cầu SQS FIFO
-  3. Chủ động báo cho sender biết message là bản sao
+- Nhiều loại thành tựu có thể chia sẻ hơn  
+- Các tính năng hỗ trợ tổ chức và nhà tuyển dụng tìm kiếm ứng viên dựa trên năng lực AWS  
 
 ---
 
-## Staging ER7 microservice
+## Bắt đầu với Skills Profile
 
-- Lambda “trigger” đăng ký với pub/sub hub, lọc message theo attribute  
-- Step Functions Express Workflow để chuyển ER7 → JSON  
-- Hai Lambda:
-  1. Sửa format ER7 (newline, carriage return)
-  2. Parsing logic  
-- Kết quả hoặc lỗi được đẩy lại vào pub/sub hub
+Để sử dụng Skills Profile:
 
----
+1. Đăng nhập vào AWS Skill Builder  
+2. Truy cập phần cài đặt hồ sơ  
+3. Tạo và tùy chỉnh Skills Profile  
+4. Chọn nội dung mà bạn muốn hiển thị  
+5. Thêm một tiêu đề cá nhân (headline) nếu muốn  
+6. Chia sẻ liên kết hồ sơ của bạn với mạng lưới chuyên môn  
 
-## Tính năng mới trong giải pháp
+Dù bạn đang hướng đến công việc mới, muốn thể hiện chứng chỉ vừa đạt được, hay chỉ đơn giản là muốn chia sẻ tiến trình học tập của mình, Skills Profile sẽ giúp bạn giới thiệu chuyên môn AWS của mình ra thế giới.
 
-### 1. AWS CloudFormation cross-stack references
-Ví dụ *outputs* trong core microservice:
-```yaml
-Outputs:
-  Bucket:
-    Value: !Ref Bucket
-    Export:
-      Name: !Sub ${AWS::StackName}-Bucket
-  ArtifactBucket:
-    Value: !Ref ArtifactBucket
-    Export:
-      Name: !Sub ${AWS::StackName}-ArtifactBucket
-  Topic:
-    Value: !Ref Topic
-    Export:
-      Name: !Sub ${AWS::StackName}-Topic
-  Catalog:
-    Value: !Ref Catalog
-    Export:
-      Name: !Sub ${AWS::StackName}-Catalog
-  CatalogArn:
-    Value: !GetAtt Catalog.Arn
-    Export:
-      Name: !Sub ${AWS::StackName}-CatalogArn
+**Sẵn sàng chia sẻ hành trình AWS của bạn?**  
+Hãy đăng nhập vào AWS Skill Builder và bắt đầu tạo Skills Profile ngay hôm nay!

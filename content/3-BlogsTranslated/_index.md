@@ -6,26 +6,20 @@ chapter: false
 pre: " <b> 3. </b> "
 ---
 
-{{% notice warning %}}
+<!-- {{% notice warning %}}
 ⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your own report, including this warning.
-{{% /notice %}}
+{{% /notice %}} -->
 
 This section will list and introduce the blogs you have translated. For example:
 
-###  [Blog 1 - Getting started with healthcare data lakes: Using microservices](3.1-Blog1/)
-This blog introduces how to start building a data lake in the healthcare sector by applying a microservices architecture. You will learn why data lakes are important for storing and analyzing diverse healthcare data (electronic medical records, lab test data, medical IoT devices…), how microservices help make the system more flexible, scalable, and easier to maintain. The article also guides you through the steps to set up the environment, organize the data processing pipeline, and ensure compliance with security & privacy standards such as HIPAA.
+### [Blog 1 – Deploying a High Performance Computing solution for accurate weather and renewable energy production predictions](3.1-Blog1/)
+This blog explains how Iberdrola deploys a high-performance computing (HPC) cluster on AWS to improve weather forecasting accuracy and renewable energy production predictions. The article walks through business motivations, MeteoFlow’s evolution, data requirements, cloud migration, HPC architecture, and AWS services that enable large-scale meteorological simulations and ML-based forecasting.
 
-###  [Blog 2 - ...](3.2-Blog2/)
-This blog introduces how to start building a data lake in the healthcare sector by applying a microservices architecture. You will learn why data lakes are important for storing and analyzing diverse healthcare data (electronic medical records, lab test data, medical IoT devices…), how microservices help make the system more flexible, scalable, and easier to maintain. The article also guides you through the steps to set up the environment, organize the data processing pipeline, and ensure compliance with security & privacy standards such as HIPAA.
 
-###  [Blog 3 - ...](3.3-Blog3/)
-This blog introduces how to start building a data lake in the healthcare sector by applying a microservices architecture. You will learn why data lakes are important for storing and analyzing diverse healthcare data (electronic medical records, lab test data, medical IoT devices…), how microservices help make the system more flexible, scalable, and easier to maintain. The article also guides you through the steps to set up the environment, organize the data processing pipeline, and ensure compliance with security & privacy standards such as HIPAA.
+###  [Blog 2 - Showcasing Your AWS Achievements with the New Skills Profile](3.2-Blog2/)
+This blog introduces Skills Profile, a new feature in AWS Skill Builder that allows learners to compile, manage, and share all their AWS certifications and achievements in a single profile. The tool helps showcase skills in a professional and verifiable way, making it ideal for sharing on platforms like LinkedIn or in job applications. As a result, learners can enhance their credibility, expand their network, and create more career opportunities in the cloud computing field.
 
-###  [Blog 4 - ...](3.4-Blog4/)
-This blog introduces how to start building a data lake in the healthcare sector by applying a microservices architecture. You will learn why data lakes are important for storing and analyzing diverse healthcare data (electronic medical records, lab test data, medical IoT devices…), how microservices help make the system more flexible, scalable, and easier to maintain. The article also guides you through the steps to set up the environment, organize the data processing pipeline, and ensure compliance with security & privacy standards such as HIPAA.
+###  [Blog 3 - How DTN accelerates operational weather prediction using NVIDIA Earth-2 on AWS](3.3-Blog3/)
+This blog describes how DTN uses NVIDIA Earth-2 on AWS to accelerate operational weather forecasting with AI models, especially for predicting and tracking cyclones. By deploying AI models like FourCastNet on AWS services such as AWS Batch, GPU-powered EC2 instances, Step Functions, and S3, DTN can generate forecasts orders of magnitude faster than traditional physics-based models while improving accuracy and scalability. This solution helps businesses reduce risk, optimize operations, and make better decisions during extreme weather events.
 
-###  [Blog 5 - ...](3.5-Blog5/)
-This blog introduces how to start building a data lake in the healthcare sector by applying a microservices architecture. You will learn why data lakes are important for storing and analyzing diverse healthcare data (electronic medical records, lab test data, medical IoT devices…), how microservices help make the system more flexible, scalable, and easier to maintain. The article also guides you through the steps to set up the environment, organize the data processing pipeline, and ensure compliance with security & privacy standards such as HIPAA.
 
-###  [Blog 6 - ...](3.6-Blog6/)
-This blog introduces how to start building a data lake in the healthcare sector by applying a microservices architecture. You will learn why data lakes are important for storing and analyzing diverse healthcare data (electronic medical records, lab test data, medical IoT devices…), how microservices help make the system more flexible, scalable, and easier to maintain. The article also guides you through the steps to set up the environment, organize the data processing pipeline, and ensure compliance with security & privacy standards such as HIPAA.

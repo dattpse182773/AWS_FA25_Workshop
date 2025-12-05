@@ -5,122 +5,100 @@ weight: 1
 chapter: false
 pre: " <b> 3.1. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
 
-# Bắt đầu với healthcare data lakes: Sử dụng microservices
+<!-- {{% notice warning %}}
+⚠️ **Lưu ý:** Thông tin dưới đây chỉ dùng để tham khảo. Vui lòng **không sao chép nguyên văn** cho báo cáo của bạn, bao gồm cả phần cảnh báo này.
+{{% /notice %}} -->
 
-Các data lake có thể giúp các bệnh viện và cơ sở y tế chuyển dữ liệu thành những thông tin chi tiết về doanh nghiệp và duy trì hoạt động kinh doanh liên tục, đồng thời bảo vệ quyền riêng tư của bệnh nhân. **Data lake** là một kho lưu trữ tập trung, được quản lý và bảo mật để lưu trữ tất cả dữ liệu của bạn, cả ở dạng ban đầu và đã xử lý để phân tích. data lake cho phép bạn chia nhỏ các kho chứa dữ liệu và kết hợp các loại phân tích khác nhau để có được thông tin chi tiết và đưa ra các quyết định kinh doanh tốt hơn.
+# Triển khai giải pháp High Performance Computing cho dự báo thời tiết và sản lượng năng lượng tái tạo chính xác
 
-Bài đăng trên blog này là một phần của loạt bài lớn hơn về việc bắt đầu cài đặt data lake dành cho lĩnh vực y tế. Trong bài đăng blog cuối cùng của tôi trong loạt bài, *“Bắt đầu với data lake dành cho lĩnh vực y tế: Đào sâu vào Amazon Cognito”*, tôi tập trung vào các chi tiết cụ thể của việc sử dụng Amazon Cognito và Attribute Based Access Control (ABAC) để xác thực và ủy quyền người dùng trong giải pháp data lake y tế. Trong blog này, tôi trình bày chi tiết cách giải pháp đã phát triển ở cấp độ cơ bản, bao gồm các quyết định thiết kế mà tôi đã đưa ra và các tính năng bổ sung được sử dụng. Bạn có thể truy cập các code samples cho giải pháp tại Git repo này để tham khảo.
+Lĩnh vực khí tượng từ lâu đã dựa vào các mô hình tính toán để dự đoán thời tiết. Sự phát triển của High-Performance Computing (HPC) và machine learning (ML) đã giúp các dự đoán này trở nên chính xác và đáng tin cậy hơn. Bài viết này trình bày các bước triển khai cụm HPC phục vụ dự báo thời tiết trên nền tảng Amazon Web Services (AWS). Nó phân tích cách các giải pháp dựa trên đám mây mang lại tính linh hoạt và khả năng mở rộng, đồng thời mô tả cách HPC và công nghệ đám mây giúp các chuyên gia khí tượng của Iberdrola tính toán dự báo sản lượng năng lượng tái tạo.
 
----
+Đối với Iberdrola — đơn vị sản xuất **80,3 TWh năng lượng tái tạo trong năm 2024**, dự báo thời tiết chính xác là yếu tố then chốt. Các yêu cầu quy định được áp dụng tại Tây Ban Nha từ năm 2004 đã bắt buộc dự báo sản lượng năng lượng tái tạo, dẫn đến việc Iberdrola Renovables xây dựng MeteoFlow — một công cụ dự báo nội bộ đã được phát triển liên tục suốt 20 năm.
 
-## Hướng dẫn kiến trúc
+Qua thời gian, MeteoFlow đã phát triển để tích hợp các kỹ thuật mô phỏng khí tượng tiên tiến, ML, AI và công nghệ dữ liệu lớn. Với sự hỗ trợ của đội ngũ chuyên gia đa ngành, hệ thống hiện cung cấp các dự đoán sản lượng năng lượng ngắn hạn và dài hạn chính xác cho nhiều cơ sở năng lượng tái tạo.
 
-Thay đổi chính kể từ lần trình bày cuối cùng của kiến trúc tổng thể là việc tách dịch vụ đơn lẻ thành một tập hợp các dịch vụ nhỏ để cải thiện khả năng bảo trì và tính linh hoạt. Việc tích hợp một lượng lớn dữ liệu y tế khác nhau thường yêu cầu các trình kết nối chuyên biệt cho từng định dạng; bằng cách giữ chúng được đóng gói riêng biệt với microservices, chúng ta có thể thêm, xóa và sửa đổi từng trình kết nối mà không ảnh hưởng đến những kết nối khác. Các microservices được kết nối rời thông qua tin nhắn publish/subscribe tập trung trong cái mà tôi gọi là “pub/sub hub”.
+MeteoFlow tạo ra dự báo sản lượng cho các trang trại điện gió trên bờ, ngoài khơi, các nhà máy quang điện và các cơ sở thủy điện toàn cầu của Iberdrola — dựa trên dự báo gió, bức xạ mặt trời và các dữ liệu khí tượng khác. Các dự báo này hỗ trợ tham gia thị trường năng lượng, lập kế hoạch O&M, và đánh giá rủi ro.
 
-Giải pháp này đại diện cho những gì tôi sẽ coi là một lần lặp nước rút hợp lý khác từ last post của tôi. Phạm vi vẫn được giới hạn trong việc nhập và phân tích cú pháp đơn giản của các **HL7v2 messages** được định dạng theo **Quy tắc mã hóa 7 (ER7)** thông qua giao diện REST.
-
-**Kiến trúc giải pháp bây giờ như sau:**
-
-> *Hình 1. Kiến trúc tổng thể; những ô màu thể hiện những dịch vụ riêng biệt.*
+Các mô hình khí tượng hiện đại giải các phương trình vi phân phi tuyến phức tạp như phương trình Navier–Stokes, đòi hỏi năng lực tính toán quy mô lớn và khả năng truy cập dữ liệu tốc độ cao. Những yêu cầu này khiến điện toán đám mây — với tài nguyên tính toán đàn hồi và dung lượng lưu trữ hầu như không giới hạn — trở thành lựa chọn lý tưởng để vận hành các tác vụ dự báo của MeteoFlow.
 
 ---
 
-Mặc dù thuật ngữ *microservices* có một số sự mơ hồ cố hữu, một số đặc điểm là chung:  
-- Chúng nhỏ, tự chủ, kết hợp rời rạc  
-- Có thể tái sử dụng, giao tiếp thông qua giao diện được xác định rõ  
-- Chuyên biệt để giải quyết một việc  
-- Thường được triển khai trong **event-driven architecture**
+## Giá trị kinh doanh
 
-Khi xác định vị trí tạo ranh giới giữa các microservices, cần cân nhắc:  
-- **Nội tại**: công nghệ được sử dụng, hiệu suất, độ tin cậy, khả năng mở rộng  
-- **Bên ngoài**: chức năng phụ thuộc, tần suất thay đổi, khả năng tái sử dụng  
-- **Con người**: quyền sở hữu nhóm, quản lý *cognitive load*
+MeteoFlow mang lại giá trị kinh doanh quan trọng bằng cách cung cấp dự báo sản lượng điện chính xác với thời gian:
+- **96 giờ (dự báo theo giờ)**
+- **10 ngày (dự báo theo ngày)**  
+cho **450+ nhà máy điện gió và điện mặt trời**.
 
----
+Dự báo chính xác giúp Iberdrola:
+- Tăng doanh thu  
+- Giảm mức phạt do sai lệch dự báo thị trường  
+- Tăng tính cạnh tranh của năng lượng tái tạo  
+- Tối ưu hóa hoạt động O&M  
+- Nâng cao quản lý rủi ro  
 
-## Lựa chọn công nghệ và phạm vi giao tiếp
-
-| Phạm vi giao tiếp                        | Các công nghệ / mô hình cần xem xét                                                        |
-| ---------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Trong một microservice                   | Amazon Simple Queue Service (Amazon SQS), AWS Step Functions                               |
-| Giữa các microservices trong một dịch vụ | AWS CloudFormation cross-stack references, Amazon Simple Notification Service (Amazon SNS) |
-| Giữa các dịch vụ                         | Amazon EventBridge, AWS Cloud Map, Amazon API Gateway                                      |
-
----
-
-## The pub/sub hub
-
-Việc sử dụng kiến trúc **hub-and-spoke** (hay message broker) hoạt động tốt với một số lượng nhỏ các microservices liên quan chặt chẽ.  
-- Mỗi microservice chỉ phụ thuộc vào *hub*  
-- Kết nối giữa các microservice chỉ giới hạn ở nội dung của message được xuất  
-- Giảm số lượng synchronous calls vì pub/sub là *push* không đồng bộ một chiều
-
-Nhược điểm: cần **phối hợp và giám sát** để tránh microservice xử lý nhầm message.
+MeteoFlow còn cung cấp:
+- Bản đồ thời tiết qua hệ thống intranet của Iberdrola  
+- Cảnh báo rủi ro thời gian thực (gió mạnh, sương giá, bão…)  
+- Dự báo dòng chảy cho các nhà máy thủy điện  
+- Dự báo sóng cho các tài sản năng lượng ngoài khơi  
+- Công cụ hiển thị và phân tích dữ liệu qua *MeteoWeb*  
 
 ---
 
-## Core microservice
+## Kiến trúc MeteoFlow trên AWS
 
-Cung cấp dữ liệu nền tảng và lớp truyền thông, gồm:  
-- **Amazon S3** bucket cho dữ liệu  
-- **Amazon DynamoDB** cho danh mục dữ liệu  
-- **AWS Lambda** để ghi message vào data lake và danh mục  
-- **Amazon SNS** topic làm *hub*  
-- **Amazon S3** bucket cho artifacts như mã Lambda
+Việc chuyển hệ thống lên AWS tập trung vào ba yêu cầu:
 
-> Chỉ cho phép truy cập ghi gián tiếp vào data lake qua hàm Lambda → đảm bảo nhất quán.
+1. **Xử lý hơn 300 TB dữ liệu khí tượng** ở quy mô lớn  
+2. **Dự báo thời gian thực**, hỗ trợ ra quyết định kịp thời  
+3. **Tính linh hoạt và khả năng mô-đun hóa**, giúp tích hợp tốt hơn và cải thiện cộng tác giữa các nhóm  
 
----
+Kiến trúc sử dụng các dịch vụ sau:
 
-## Front door microservice
+### **Amazon S3**
+Lưu trữ dữ liệu mô hình khí tượng toàn cầu và khu vực (IFS, GFS, ICON-EU, và các mô hình nội bộ tùy chỉnh).
 
-- Cung cấp API Gateway để tương tác REST bên ngoài  
-- Xác thực & ủy quyền dựa trên **OIDC** thông qua **Amazon Cognito**  
-- Cơ chế *deduplication* tự quản lý bằng DynamoDB thay vì SNS FIFO vì:
-  1. SNS deduplication TTL chỉ 5 phút
-  2. SNS FIFO yêu cầu SQS FIFO
-  3. Chủ động báo cho sender biết message là bản sao
+### **Amazon EC2 HPC Instances**
+Ví dụ: **hpc7a.96xlarge**:
+- 192 lõi vật lý  
+- 768 GiB RAM  
+- Kết nối mạng EFA tốc độ đến 300 Gbps  
+- CPU AMD EPYC thế hệ thứ 4  
+- Tối ưu cho các tác vụ HPC có liên kết chặt  
 
----
+### **Amazon EFS**
+Lưu trữ chia sẻ đàn hồi cho kết quả tính toán HPC.
 
-## Staging ER7 microservice
-
-- Lambda “trigger” đăng ký với pub/sub hub, lọc message theo attribute  
-- Step Functions Express Workflow để chuyển ER7 → JSON  
-- Hai Lambda:
-  1. Sửa format ER7 (newline, carriage return)
-  2. Parsing logic  
-- Kết quả hoặc lỗi được đẩy lại vào pub/sub hub
+### **Amazon SageMaker**
+Cung cấp phân tích tích hợp và phát triển mô hình ML để nâng cao độ chính xác của dự báo.
 
 ---
 
-## Tính năng mới trong giải pháp
+## Di chuyển hơn 300 TB dữ liệu lên AWS
 
-### 1. AWS CloudFormation cross-stack references
-Ví dụ *outputs* trong core microservice:
-```yaml
-Outputs:
-  Bucket:
-    Value: !Ref Bucket
-    Export:
-      Name: !Sub ${AWS::StackName}-Bucket
-  ArtifactBucket:
-    Value: !Ref ArtifactBucket
-    Export:
-      Name: !Sub ${AWS::StackName}-ArtifactBucket
-  Topic:
-    Value: !Ref Topic
-    Export:
-      Name: !Sub ${AWS::StackName}-Topic
-  Catalog:
-    Value: !Ref Catalog
-    Export:
-      Name: !Sub ${AWS::StackName}-Catalog
-  CatalogArn:
-    Value: !GetAtt Catalog.Arn
-    Export:
-      Name: !Sub ${AWS::StackName}-CatalogArn
+Ban đầu Iberdrola cân nhắc sử dụng AWS Snowball, nhưng phát hiện hạ tầng LAN tại chỗ sẽ trở thành điểm nghẽn, khiến tốc độ không nhanh hơn so với truyền trực tiếp đến AWS Ireland qua đường kết nối tốc độ cao hiện có.
+
+Thay vào đó, họ sử dụng **AWS DataSync**, giúp:
+- Tự động hóa việc truyền dữ liệu lớn  
+- Mã hóa và kiểm tra tính toàn vẹn dữ liệu  
+- Giảm đáng kể chi phí vận hành  
+
+Các bước di chuyển ở mức cao bao gồm:
+1. Thiết lập AWS Direct Connect  
+2. Tạo VGW & DX Gateway  
+3. Cấu hình Private VIF  
+4. Định tuyến lưu lượng qua Direct Connect  
+5. Triển khai DataSync agent tại on-prem  
+6. Tạo nguồn và đích (S3)  
+7. Chạy các tác vụ DataSync  
+
+Quá trình này đã di chuyển thành công toàn bộ dữ liệu lịch sử của MeteoFlow lên Amazon S3.
+
+---
+
+## Kết luận
+
+Việc chuyển MeteoFlow lên AWS Cloud đánh dấu một cột mốc quan trọng trong lịch sử phát triển của hệ thống. AWS giúp Iberdrola sử dụng tài nguyên tính toán và lưu trữ đàn hồi, quản lý tập dữ liệu khổng lồ, và tận dụng các dịch vụ nâng cao như Amazon SageMaker. Với nền tảng đám mây hiện đại, Iberdrola có thể tập trung cải thiện các mô hình dự báo dựa trên ML — qua đó tăng cường hiệu suất sản xuất năng lượng tái tạo và hiệu quả tham gia thị trường.
+

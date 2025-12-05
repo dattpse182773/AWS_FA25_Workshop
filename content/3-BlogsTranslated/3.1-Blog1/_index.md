@@ -5,122 +5,99 @@ weight: 1
 chapter: false
 pre: " <b> 3.1. </b> "
 ---
-{{% notice warning %}}
+
+<!-- {{% notice warning %}}
 ⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your report, including this warning.
-{{% /notice %}}
+{{% /notice %}} -->
 
-# Getting Started with Healthcare Data Lakes: Using Microservices
+# Deploying a High Performance Computing Solution for Accurate Weather and Renewable Energy Production Predictions
 
-Data lakes can help hospitals and healthcare facilities turn data into business insights, maintain business continuity, and protect patient privacy. A **data lake** is a centralized, managed, and secure repository to store all your data, both in its raw and processed forms for analysis. Data lakes allow you to break down data silos and combine different types of analytics to gain insights and make better business decisions.
+The field of meteorology has long relied on computational models to predict weather patterns. The advent of High-Performance Computing (HPC) and machine learning (ML) has made these predictions more accurate and reliable. This post outlines the steps for deploying an HPC cluster for weather forecasting on the Amazon Web Services (AWS) Cloud. It examines how cloud-based solutions provide computational flexibility and scalability, demonstrating how HPC and cloud technologies help Iberdrola’s meteorologists calculate renewable energy production forecasts.
 
-This blog post is part of a larger series on getting started with setting up a healthcare data lake. In my final post of the series, *“Getting Started with Healthcare Data Lakes: Diving into Amazon Cognito”*, I focused on the specifics of using Amazon Cognito and Attribute Based Access Control (ABAC) to authenticate and authorize users in the healthcare data lake solution. In this blog, I detail how the solution evolved at a foundational level, including the design decisions I made and the additional features used. You can access the code samples for the solution in this Git repo for reference.
+For Iberdrola—responsible for 80.3 TWh of renewable energy production in 2024—accurate weather forecasting is essential. Regulatory requirements implemented in Spain in 2004 mandated renewable energy production forecasting, leading Iberdrola Renovables to create MeteoFlow, an in-house forecasting tool with 20 years of continuous development.
 
----
+Over time, MeteoFlow has evolved to incorporate advanced meteorological simulation techniques, ML, AI, and big data technologies. With the support of multidisciplinary experts, the system now powers accurate short- and long-term energy production predictions across multiple renewable facilities.
 
-## Architecture Guidance
+MeteoFlow generates production forecasts for Iberdrola’s global onshore wind farms, offshore wind farms, photovoltaic plants, and hydroelectric facilities—using wind predictions, solar radiation forecasts, and additional meteorological inputs. These forecasts support energy market participation, O&M planning, and risk assessment.
 
-The main change since the last presentation of the overall architecture is the decomposition of a single service into a set of smaller services to improve maintainability and flexibility. Integrating a large volume of diverse healthcare data often requires specialized connectors for each format; by keeping them encapsulated separately as microservices, we can add, remove, and modify each connector without affecting the others. The microservices are loosely coupled via publish/subscribe messaging centered in what I call the “pub/sub hub.”
-
-This solution represents what I would consider another reasonable sprint iteration from my last post. The scope is still limited to the ingestion and basic parsing of **HL7v2 messages** formatted in **Encoding Rules 7 (ER7)** through a REST interface.
-
-**The solution architecture is now as follows:**
-
-> *Figure 1. Overall architecture; colored boxes represent distinct services.*
+Modern meteorological models solve complex nonlinear partial differential equations such as the Navier–Stokes equations, requiring large-scale computation and high-throughput data access. These constraints make the cloud—with its elastic compute resources and virtually unlimited storage—a natural fit for running MeteoFlow forecasting workloads.
 
 ---
 
-While the term *microservices* has some inherent ambiguity, certain traits are common:  
-- Small, autonomous, loosely coupled  
-- Reusable, communicating through well-defined interfaces  
-- Specialized to do one thing well  
-- Often implemented in an **event-driven architecture**
+## Business Value
 
-When determining where to draw boundaries between microservices, consider:  
-- **Intrinsic**: technology used, performance, reliability, scalability  
-- **Extrinsic**: dependent functionality, rate of change, reusability  
-- **Human**: team ownership, managing *cognitive load*
+MeteoFlow provides significant business value by producing accurate power generation forecasts up to:
+- **96 hours ahead (hourly)**
+- **10 days ahead (daily)**  
+for **450+ wind and photovoltaic plants**.
 
----
+Accurate forecasts help Iberdrola:
+- Improve revenue  
+- Reduce penalties from market forecast deviations  
+- Increase renewable energy competitiveness  
+- Optimize O&M operations  
+- Improve risk management
 
-## Technology Choices and Communication Scope
-
-| Communication scope                       | Technologies / patterns to consider                                                        |
-| ----------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Within a single microservice              | Amazon Simple Queue Service (Amazon SQS), AWS Step Functions                               |
-| Between microservices in a single service | AWS CloudFormation cross-stack references, Amazon Simple Notification Service (Amazon SNS) |
-| Between services                          | Amazon EventBridge, AWS Cloud Map, Amazon API Gateway                                      |
-
----
-
-## The Pub/Sub Hub
-
-Using a **hub-and-spoke** architecture (or message broker) works well with a small number of tightly related microservices.  
-- Each microservice depends only on the *hub*  
-- Inter-microservice connections are limited to the contents of the published message  
-- Reduces the number of synchronous calls since pub/sub is a one-way asynchronous *push*
-
-Drawback: **coordination and monitoring** are needed to avoid microservices processing the wrong message.
+MeteoFlow also offers:
+- Weather maps through Iberdrola’s intranet  
+- Real-time risk alerts (extreme winds, frost, storms)  
+- Flow prediction for hydro plants  
+- Wave prediction for offshore energy assets  
+- Data visualization and analysis via *MeteoWeb*  
 
 ---
 
-## Core Microservice
+## MeteoFlow Architecture on AWS
 
-Provides foundational data and communication layer, including:  
-- **Amazon S3** bucket for data  
-- **Amazon DynamoDB** for data catalog  
-- **AWS Lambda** to write messages into the data lake and catalog  
-- **Amazon SNS** topic as the *hub*  
-- **Amazon S3** bucket for artifacts such as Lambda code
+The system migration to AWS focused on three requirements:
 
-> Only allow indirect write access to the data lake through a Lambda function → ensures consistency.
+1. **Handling 300+ TB of meteorological data** at scale  
+2. **Real-time forecasting**, enabling timely decision-making  
+3. **Flexibility and modularity** for better integration and cross-team collaboration  
 
----
+The architecture uses:
 
-## Front Door Microservice
+### **Amazon S3**
+Stores global and regional meteorological model data (IFS, GFS, ICON-EU, custom internal models).
 
-- Provides an API Gateway for external REST interaction  
-- Authentication & authorization based on **OIDC** via **Amazon Cognito**  
-- Self-managed *deduplication* mechanism using DynamoDB instead of SNS FIFO because:  
-  1. SNS deduplication TTL is only 5 minutes  
-  2. SNS FIFO requires SQS FIFO  
-  3. Ability to proactively notify the sender that the message is a duplicate  
+### **Amazon EC2 HPC Instances**
+Such as **hpc7a.96xlarge**:
+- 192 physical cores  
+- 768 GiB RAM  
+- EFA networking up to 300 Gbps  
+- 4th-gen AMD EPYC CPUs  
+- Optimized for tightly coupled HPC workloads  
 
----
+### **Amazon EFS**
+Elastic shared storage for HPC computation results.
 
-## Staging ER7 Microservice
-
-- Lambda “trigger” subscribed to the pub/sub hub, filtering messages by attribute  
-- Step Functions Express Workflow to convert ER7 → JSON  
-- Two Lambdas:  
-  1. Fix ER7 formatting (newline, carriage return)  
-  2. Parsing logic  
-- Result or error is pushed back into the pub/sub hub  
+### **Amazon SageMaker**
+Provides integrated analytics and ML model development for improved forecast precision.
 
 ---
 
-## New Features in the Solution
+## Migrating 300+ TB of Data to AWS
 
-### 1. AWS CloudFormation Cross-Stack References
-Example *outputs* in the core microservice:
-```yaml
-Outputs:
-  Bucket:
-    Value: !Ref Bucket
-    Export:
-      Name: !Sub ${AWS::StackName}-Bucket
-  ArtifactBucket:
-    Value: !Ref ArtifactBucket
-    Export:
-      Name: !Sub ${AWS::StackName}-ArtifactBucket
-  Topic:
-    Value: !Ref Topic
-    Export:
-      Name: !Sub ${AWS::StackName}-Topic
-  Catalog:
-    Value: !Ref Catalog
-    Export:
-      Name: !Sub ${AWS::StackName}-Catalog
-  CatalogArn:
-    Value: !GetAtt Catalog.Arn
-    Export:
-      Name: !Sub ${AWS::StackName}-CatalogArn
+Iberdrola initially considered AWS Snowball but discovered that their on-premises LAN bottleneck would make it no faster than transferring directly to AWS Ireland over their existing high-speed link.
+
+Instead, they used **AWS DataSync**, which:
+- Automates large data transfers
+- Provides encryption and integrity validation
+- Minimizes operational overhead
+
+High-level migration steps included:
+1. Setting up AWS Direct Connect
+2. Creating VGW & DX Gateway
+3. Configuring Private VIF
+4. Routing traffic via Direct Connect
+5. Deploying a DataSync agent on-prem
+6. Creating source & destination (S3) locations
+7. Running DataSync tasks
+
+This successfully migrated all historical MeteoFlow datasets to Amazon S3.
+
+---
+
+## Conclusion
+
+Migrating MeteoFlow to the AWS Cloud marks a major milestone in its long development history. AWS enables Iberdrola to use elastic compute and storage, manage massive datasets, and leverage advanced services like Amazon SageMaker. With this cloud-native foundation, Iberdrola can focus on improving ML-driven forecasting models—ultimately strengthening renewable energy production and market performance.

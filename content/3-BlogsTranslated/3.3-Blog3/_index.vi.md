@@ -5,123 +5,102 @@ weight: 1
 chapter: false
 pre: " <b> 3.3. </b> "
 ---
+<!-- {{% notice warning %}}
+⚠️ **Lưu ý:** Thông tin bên dưới chỉ mang tính tham khảo. Vui lòng **không sao chép nguyên văn** vào báo cáo của bạn, bao gồm cả thông báo này.
+{{% /notice %}} -->
 
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
+# Cách DTN tăng tốc dự báo thời tiết vận hành bằng NVIDIA Earth-2 trên AWS
 
-# Bắt đầu với healthcare data lakes: Sử dụng microservices
+Dự báo thời tiết chính xác và kịp thời đang trở nên ngày càng quan trọng đối với các ngành như năng lượng, nông nghiệp, hàng không và vận tải biển. Các mô hình dự báo thời tiết số (NWP) truyền thống dựa trên vật lý đòi hỏi lượng tài nguyên tính toán rất lớn và thời gian xử lý dài, gây khó khăn cho việc mở rộng khi có các hiện tượng thời tiết cực đoan. Để giải quyết vấn đề này, DTN đã hợp tác với NVIDIA và AWS để tích hợp **NVIDIA Earth-2** — nền tảng mô phỏng thời tiết dựa trên AI — vào hệ thống vận hành, giúp tăng tốc độ dự báo, mở rộng linh hoạt và nâng cao độ chính xác.
 
-Các data lake có thể giúp các bệnh viện và cơ sở y tế chuyển dữ liệu thành những thông tin chi tiết về doanh nghiệp và duy trì hoạt động kinh doanh liên tục, đồng thời bảo vệ quyền riêng tư của bệnh nhân. **Data lake** là một kho lưu trữ tập trung, được quản lý và bảo mật để lưu trữ tất cả dữ liệu của bạn, cả ở dạng ban đầu và đã xử lý để phân tích. data lake cho phép bạn chia nhỏ các kho chứa dữ liệu và kết hợp các loại phân tích khác nhau để có được thông tin chi tiết và đưa ra các quyết định kinh doanh tốt hơn.
-
-Bài đăng trên blog này là một phần của loạt bài lớn hơn về việc bắt đầu cài đặt data lake dành cho lĩnh vực y tế. Trong bài đăng blog cuối cùng của tôi trong loạt bài, *“Bắt đầu với data lake dành cho lĩnh vực y tế: Đào sâu vào Amazon Cognito”*, tôi tập trung vào các chi tiết cụ thể của việc sử dụng Amazon Cognito và Attribute Based Access Control (ABAC) để xác thực và ủy quyền người dùng trong giải pháp data lake y tế. Trong blog này, tôi trình bày chi tiết cách giải pháp đã phát triển ở cấp độ cơ bản, bao gồm các quyết định thiết kế mà tôi đã đưa ra và các tính năng bổ sung được sử dụng. Bạn có thể truy cập các code samples cho giải pháp tại Git repo này để tham khảo.
-
----
-
-## Hướng dẫn kiến trúc
-
-Thay đổi chính kể từ lần trình bày cuối cùng của kiến trúc tổng thể là việc tách dịch vụ đơn lẻ thành một tập hợp các dịch vụ nhỏ để cải thiện khả năng bảo trì và tính linh hoạt. Việc tích hợp một lượng lớn dữ liệu y tế khác nhau thường yêu cầu các trình kết nối chuyên biệt cho từng định dạng; bằng cách giữ chúng được đóng gói riêng biệt với microservices, chúng ta có thể thêm, xóa và sửa đổi từng trình kết nối mà không ảnh hưởng đến những kết nối khác. Các microservices được kết nối rời thông qua tin nhắn publish/subscribe tập trung trong cái mà tôi gọi là “pub/sub hub”.
-
-Giải pháp này đại diện cho những gì tôi sẽ coi là một lần lặp nước rút hợp lý khác từ last post của tôi. Phạm vi vẫn được giới hạn trong việc nhập và phân tích cú pháp đơn giản của các **HL7v2 messages** được định dạng theo **Quy tắc mã hóa 7 (ER7)** thông qua giao diện REST.
-
-**Kiến trúc giải pháp bây giờ như sau:**
-
-> *Hình 1. Kiến trúc tổng thể; những ô màu thể hiện những dịch vụ riêng biệt.*
+Blog này mô tả cách DTN xây dựng quy trình dự báo thời tiết cloud-native sử dụng GPU trên AWS với **Earth2Studio**, **AWS Batch**, **các phiên bản EC2 GPU**, và **Step Functions**. Bài viết cũng trình bày cách hệ thống cải thiện độ chính xác theo dõi bão, giảm rủi ro vận hành và hỗ trợ ra quyết định cho khách hàng toàn cầu của DTN.
 
 ---
 
-Mặc dù thuật ngữ *microservices* có một số sự mơ hồ cố hữu, một số đặc điểm là chung:  
-- Chúng nhỏ, tự chủ, kết hợp rời rạc  
-- Có thể tái sử dụng, giao tiếp thông qua giao diện được xác định rõ  
-- Chuyên biệt để giải quyết một việc  
-- Thường được triển khai trong **event-driven architecture**
+## Tổng quan về NVIDIA Earth-2
 
-Khi xác định vị trí tạo ranh giới giữa các microservices, cần cân nhắc:  
-- **Nội tại**: công nghệ được sử dụng, hiệu suất, độ tin cậy, khả năng mở rộng  
-- **Bên ngoài**: chức năng phụ thuộc, tần suất thay đổi, khả năng tái sử dụng  
-- **Con người**: quyền sở hữu nhóm, quản lý *cognitive load*
+**NVIDIA Earth-2** là nền tảng cấp doanh nghiệp dành cho phát triển và vận hành các mô hình thời tiết và khí hậu dựa trên AI. Nền tảng cung cấp:
 
----
+- Các pipeline tăng tốc cho mô hình AI dựa trên vật lý  
+- Các mô hình thời tiết AI đã huấn luyện sẵn như *FourCastNet*  
+- Các mô hình siêu phân giải như *CorrDiff*  
+- Các workflow mô phỏng và trực quan hóa  
+- Công cụ tích hợp dữ liệu thời gian thực từ các nguồn như Registry of Open Data on AWS  
 
-## Lựa chọn công nghệ và phạm vi giao tiếp
-
-| Phạm vi giao tiếp                        | Các công nghệ / mô hình cần xem xét                                                        |
-| ---------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Trong một microservice                   | Amazon Simple Queue Service (Amazon SQS), AWS Step Functions                               |
-| Giữa các microservices trong một dịch vụ | AWS CloudFormation cross-stack references, Amazon Simple Notification Service (Amazon SNS) |
-| Giữa các dịch vụ                         | Amazon EventBridge, AWS Cloud Map, Amazon API Gateway                                      |
+AI inference giúp giảm đáng kể thời gian dự báo—từ hàng giờ xuống chỉ vài giây—cho phép tạo nhanh các dự báo tổ hợp (ensemble) với chi phí thấp hơn.
 
 ---
 
-## The pub/sub hub
+## Pipeline dự báo thời tiết AI của DTN trên AWS
 
-Việc sử dụng kiến trúc **hub-and-spoke** (hay message broker) hoạt động tốt với một số lượng nhỏ các microservices liên quan chặt chẽ.  
-- Mỗi microservice chỉ phụ thuộc vào *hub*  
-- Kết nối giữa các microservice chỉ giới hạn ở nội dung của message được xuất  
-- Giảm số lượng synchronous calls vì pub/sub là *push* không đồng bộ một chiều
+DTN đã triển khai pipeline inference có khả năng mở rộng, được quản lý hoàn toàn trên AWS bằng Earth2Studio. Một quy trình dự báo điển hình gồm các bước:
 
-Nhược điểm: cần **phối hợp và giám sát** để tránh microservice xử lý nhầm message.
+1. **Chuẩn bị dữ liệu**  
+   - AWS Lambda xử lý và chuẩn bị các điều kiện đầu vào  
+   - Các tiện ích Python định dạng dữ liệu phù hợp với mô hình  
 
----
+2. **Suy luận bằng mô hình AI**  
+   - AWS Batch triển khai workload của Earth2Studio trên các phiên bản EC2 GPU (G6e, P5, P6)  
+   - FourCastNet tạo dự báo tổ hợp toàn cầu ở độ phân giải 25 km chỉ trong vài giây  
 
-## Core microservice
+3. **Hậu xử lý và tổng hợp**  
+   - Container Python tính toán thống kê dự báo tổ hợp  
+   - Độ bất định được đo bằng các chỉ số như độ lệch chuẩn  
 
-Cung cấp dữ liệu nền tảng và lớp truyền thông, gồm:  
-- **Amazon S3** bucket cho dữ liệu  
-- **Amazon DynamoDB** cho danh mục dữ liệu  
-- **AWS Lambda** để ghi message vào data lake và danh mục  
-- **Amazon SNS** topic làm *hub*  
-- **Amazon S3** bucket cho artifacts như mã Lambda
-
-> Chỉ cho phép truy cập ghi gián tiếp vào data lake qua hàm Lambda → đảm bảo nhất quán.
+> Kiến trúc này cho phép DTN mở rộng khả năng dự báo theo nhu cầu—đặc biệt hữu ích trong mùa bão hoặc các sự kiện thời tiết cực đoan.
 
 ---
 
-## Front door microservice
+## Kiến trúc Cloud-Native
 
-- Cung cấp API Gateway để tương tác REST bên ngoài  
-- Xác thực & ủy quyền dựa trên **OIDC** thông qua **Amazon Cognito**  
-- Cơ chế *deduplication* tự quản lý bằng DynamoDB thay vì SNS FIFO vì:
-  1. SNS deduplication TTL chỉ 5 phút
-  2. SNS FIFO yêu cầu SQS FIFO
-  3. Chủ động báo cho sender biết message là bản sao
+Hệ thống sản xuất của DTN được xây dựng dựa trên container và mô hình điều phối theo sự kiện.
+
+### Các thành phần AWS chính:
+
+- **Amazon ECR** – lưu trữ container inference tối ưu GPU  
+- **AWS Batch** – lập lịch và quản lý workload GPU/CPU  
+- **AWS Step Functions** – điều phối pipeline dự báo nhiều giai đoạn  
+- **Amazon S3** – data lake lưu đầu vào, đầu ra và mô hình  
+- **Amazon SNS** – kích hoạt thông báo cho quy trình downstream  
+- **s3fs-mounted S3 volumes** – tăng tốc truy xuất dữ liệu khí tượng lớn  
+
+Để đảm bảo độ tin cậy, hệ thống được tích hợp:
+
+- Cơ chế retry của Step Functions  
+- Dead-letter queues để cô lập lỗi  
+- Bộ nhớ đệm cho dữ liệu đầu vào nhằm giảm tải download lặp lại  
+- Triển khai hạ tầng hoàn chỉnh bằng **AWS CDK**  
 
 ---
 
-## Staging ER7 microservice
+## Kiểm chứng và hiệu năng
 
-- Lambda “trigger” đăng ký với pub/sub hub, lọc message theo attribute  
-- Step Functions Express Workflow để chuyển ER7 → JSON  
-- Hai Lambda:
-  1. Sửa format ER7 (newline, carriage return)
-  2. Parsing logic  
-- Kết quả hoặc lỗi được đẩy lại vào pub/sub hub
+DTN đã kiểm chứng giải pháp bằng dữ liệu của các hiện tượng như bão Milton, Helene và Lee. Các dự báo tổ hợp từ Earth-2 cho thấy độ tương đồng cao với dữ liệu quan sát BestTrack, chứng minh khả năng mô hình trong việc dự báo quỹ đạo bão nhanh và chính xác.
+
+Hệ thống chính thức vận hành từ tháng 6/2025 sau bốn tháng phát triển, nhờ sự phối hợp giữa chuyên gia AWS và NVIDIA để tinh chỉnh pipeline cho độ ổn định sản xuất.
 
 ---
 
-## Tính năng mới trong giải pháp
+## Tác động kinh doanh
 
-### 1. AWS CloudFormation cross-stack references
-Ví dụ *outputs* trong core microservice:
-```yaml
-Outputs:
-  Bucket:
-    Value: !Ref Bucket
-    Export:
-      Name: !Sub ${AWS::StackName}-Bucket
-  ArtifactBucket:
-    Value: !Ref ArtifactBucket
-    Export:
-      Name: !Sub ${AWS::StackName}-ArtifactBucket
-  Topic:
-    Value: !Ref Topic
-    Export:
-      Name: !Sub ${AWS::StackName}-Topic
-  Catalog:
-    Value: !Ref Catalog
-    Export:
-      Name: !Sub ${AWS::StackName}-Catalog
-  CatalogArn:
-    Value: !GetAtt Catalog.Arn
-    Export:
-      Name: !Sub ${AWS::StackName}-CatalogArn
+Việc tích hợp dự báo thời tiết AI vào hệ thống vận hành giúp DTN cung cấp:
+
+- Dự báo chính xác và kịp thời hơn  
+- Khả năng đánh giá rủi ro tốt hơn cho các hiện tượng thời tiết mạnh  
+- Cải thiện hiệu suất vận hành của khách hàng  
+- Dashboard hỗ trợ ra quyết định mạnh mẽ dựa trên “Decision-Grade Data” của DTN  
+
+Điều này giúp khách hàng trong các lĩnh vực năng lượng, nông nghiệp, logistics và chuỗi cung ứng lên kế hoạch và ứng phó hiệu quả hơn.
+
+---
+
+## Lộ trình phát triển tương lai
+
+DTN dự định mở rộng năng lực dự báo AI bằng cách:
+
+- Mở rộng phạm vi dự báo (từ theo giờ đến cận mùa)  
+- Cải thiện các chỉ số đánh giá độ tin cậy dự báo  
+- Hỗ trợ thêm nhiều mô hình AI của nền tảng Earth-2  
+- Tích hợp sâu hơn với hệ thống phân tích khí hậu nâng cao  
+
+Sự linh hoạt của NVIDIA Earth-2 và các dịch vụ AWS giúp DTN tiếp tục dẫn đầu trong đổi mới dự báo thời tiết bằng AI.

@@ -5,122 +5,71 @@ weight: 1
 chapter: false
 pre: " <b> 3.2. </b> "
 ---
-{{% notice warning %}}
+<!-- {{% notice warning %}}
 ⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your report, including this warning.
-{{% /notice %}}
+{{% /notice %}} -->
 
-# Getting Started with Healthcare Data Lakes: Using Microservices
+# Showcasing Your AWS Achievements with the New Skills Profile
 
-Data lakes can help hospitals and healthcare facilities turn data into business insights, maintain business continuity, and protect patient privacy. A **data lake** is a centralized, managed, and secure repository to store all your data, both in its raw and processed forms for analysis. Data lakes allow you to break down data silos and combine different types of analytics to gain insights and make better business decisions.
+For learners looking to present their AWS journey with confidence and professionalism, AWS Skill Builder now offers **Skills Profile**—a powerful new way to highlight verified AWS certifications, learning achievements, and badges in one shareable profile. With customizable sharing options, Skills Profile helps you tell your unique cloud-skills story while building visibility and credibility in your industry.
 
-This blog post is part of a larger series on getting started with setting up a healthcare data lake. In my final post of the series, *“Getting Started with Healthcare Data Lakes: Diving into Amazon Cognito”*, I focused on the specifics of using Amazon Cognito and Attribute Based Access Control (ABAC) to authenticate and authorize users in the healthcare data lake solution. In this blog, I detail how the solution evolved at a foundational level, including the design decisions I made and the additional features used. You can access the code samples for the solution in this Git repo for reference.
+Skills Profile is available to Skill Builder users who are signed in, providing a centralized, trustworthy place to showcase your AWS accomplishments. Whether you are an aspiring cloud practitioner or an experienced AWS professional, your Skills Profile becomes your dedicated **AWS skills showcase**—ready to share on LinkedIn, in job applications, or with colleagues and hiring managers.
 
----
-
-## Architecture Guidance
-
-The main change since the last presentation of the overall architecture is the decomposition of a single service into a set of smaller services to improve maintainability and flexibility. Integrating a large volume of diverse healthcare data often requires specialized connectors for each format; by keeping them encapsulated separately as microservices, we can add, remove, and modify each connector without affecting the others. The microservices are loosely coupled via publish/subscribe messaging centered in what I call the “pub/sub hub.”
-
-This solution represents what I would consider another reasonable sprint iteration from my last post. The scope is still limited to the ingestion and basic parsing of **HL7v2 messages** formatted in **Encoding Rules 7 (ER7)** through a REST interface.
-
-**The solution architecture is now as follows:**
-
-> *Figure 1. Overall architecture; colored boxes represent distinct services.*
+> “Skills Profile makes it easier to highlight the AWS learning journey and the skills I have developed. I can share my certifications and learning milestones in one clean, professional format—no screenshots or scattered links needed.”  
+> – AWS Skill Builder learner
 
 ---
 
-While the term *microservices* has some inherent ambiguity, certain traits are common:  
-- Small, autonomous, loosely coupled  
-- Reusable, communicating through well-defined interfaces  
-- Specialized to do one thing well  
-- Often implemented in an **event-driven architecture**
+## From Learning to Professional Recognition
 
-When determining where to draw boundaries between microservices, consider:  
-- **Intrinsic**: technology used, performance, reliability, scalability  
-- **Extrinsic**: dependent functionality, rate of change, reusability  
-- **Human**: team ownership, managing *cognitive load*
+As social learning behaviors grow on professional platforms, it has become essential for learners to demonstrate their expertise in a trustworthy and consistent way. Skills Profile bridges the gap between private learning records and public professional recognition.
 
----
+While your **Learner Dashboard** remains private, the **Skills Profile** is designed for public sharing. It showcases:
 
-## Technology Choices and Communication Scope
+- AWS Certifications  
+- Skill Builder learning achievement records  
+- Cloud Quest badges  
+- Other verified milestones  
 
-| Communication scope                       | Technologies / patterns to consider                                                        |
-| ----------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Within a single microservice              | Amazon Simple Queue Service (Amazon SQS), AWS Step Functions                               |
-| Between microservices in a single service | AWS CloudFormation cross-stack references, Amazon Simple Notification Service (Amazon SNS) |
-| Between services                          | Amazon EventBridge, AWS Cloud Map, Amazon API Gateway                                      |
+You have full control over what appears on your profile, allowing you to tailor the story you share with your professional network.
 
 ---
 
-## The Pub/Sub Hub
+## Building Connections Through Shared Skills
 
-Using a **hub-and-spoke** architecture (or message broker) works well with a small number of tightly related microservices.  
-- Each microservice depends only on the *hub*  
-- Inter-microservice connections are limited to the contents of the published message  
-- Reduces the number of synchronous calls since pub/sub is a one-way asynchronous *push*
+Skills Profile delivers new value for both individuals and organizations by making cloud expertise **visible**, **shareable**, and **verifiable**.
 
-Drawback: **coordination and monitoring** are needed to avoid microservices processing the wrong message.
+When you share your AWS achievements, you open opportunities for:
 
----
+- Professional networking  
+- Project collaboration  
+- Career advancement  
 
-## Core Microservice
+For organizations and hiring managers, Skills Profile becomes a trusted source for:
 
-Provides foundational data and communication layer, including:  
-- **Amazon S3** bucket for data  
-- **Amazon DynamoDB** for data catalog  
-- **AWS Lambda** to write messages into the data lake and catalog  
-- **Amazon SNS** topic as the *hub*  
-- **Amazon S3** bucket for artifacts such as Lambda code
+- Discovering cloud talent  
+- Verifying AWS skill sets  
+- Matching roles with specific AWS capabilities  
 
-> Only allow indirect write access to the data lake through a Lambda function → ensures consistency.
+In the future, Skills Profile will expand further, including:
 
----
-
-## Front Door Microservice
-
-- Provides an API Gateway for external REST interaction  
-- Authentication & authorization based on **OIDC** via **Amazon Cognito**  
-- Self-managed *deduplication* mechanism using DynamoDB instead of SNS FIFO because:  
-  1. SNS deduplication TTL is only 5 minutes  
-  2. SNS FIFO requires SQS FIFO  
-  3. Ability to proactively notify the sender that the message is a duplicate  
+- Additional shareable achievements  
+- Features that help organizations and recruiters find talent based on AWS competencies  
 
 ---
 
-## Staging ER7 Microservice
+## Getting Started with Skills Profile
 
-- Lambda “trigger” subscribed to the pub/sub hub, filtering messages by attribute  
-- Step Functions Express Workflow to convert ER7 → JSON  
-- Two Lambdas:  
-  1. Fix ER7 formatting (newline, carriage return)  
-  2. Parsing logic  
-- Result or error is pushed back into the pub/sub hub  
+To begin using Skills Profile:
 
----
+1. Sign in to AWS Skill Builder  
+2. Go to your profile settings  
+3. Create and customize your Skills Profile  
+4. Select which achievements to display  
+5. Add a personalized headline  
+6. Share your profile link with your network  
 
-## New Features in the Solution
+Whether you're aiming for your next job role, showcasing new certifications, or sharing your learning progress with pride, Skills Profile helps you present your AWS expertise to the world.
 
-### 1. AWS CloudFormation Cross-Stack References
-Example *outputs* in the core microservice:
-```yaml
-Outputs:
-  Bucket:
-    Value: !Ref Bucket
-    Export:
-      Name: !Sub ${AWS::StackName}-Bucket
-  ArtifactBucket:
-    Value: !Ref ArtifactBucket
-    Export:
-      Name: !Sub ${AWS::StackName}-ArtifactBucket
-  Topic:
-    Value: !Ref Topic
-    Export:
-      Name: !Sub ${AWS::StackName}-Topic
-  Catalog:
-    Value: !Ref Catalog
-    Export:
-      Name: !Sub ${AWS::StackName}-Catalog
-  CatalogArn:
-    Value: !GetAtt Catalog.Arn
-    Export:
-      Name: !Sub ${AWS::StackName}-CatalogArn
+**Ready to share your AWS story?**  
+Sign in to AWS Skill Builder today and create your Skills Profile!
