@@ -1,126 +1,143 @@
+
 ---
 title: "Event 2"
-date: 2025-09-10
+date: 2025-09-17
 weight: 1
 chapter: false
 pre: " <b> 4.2. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy it verbatim** into your report, including this warning.
-{{% /notice %}}
 
-# Summary Report: “GenAI-powered App-DB Modernization workshop”
+# Summary Report: “DevOps on AWS” Event
 
 ### Event Objectives
 
-- Share best practices in modern application design
-- Introduce Domain-Driven Design (DDD) and event-driven architecture
-- Provide guidance on selecting the right compute services
-- Present AI tools to support the development lifecycle
+- Understand DevOps culture and mindset: Introduce the core principles of DevOps, emphasizing collaboration, automation, and continuous improvement.
 
-### Speakers
+- Learn about AWS DevOps tools: Dive into AWS services that support DevOps practices, including CI/CD pipelines, Infrastructure as Code (IaC), containerization, and monitoring.
 
-- **Jignesh Shah** – Director, Open Source Databases
-- **Erica Liu** – Sr. GTM Specialist, AppMod
-- **Fabrianne Effendi** – Assc. Specialist SA, Serverless Amazon Web Services
+- Explore DevOps best practices: Understand key metrics like DORA and MTTR, and learn best practices for deployment, incident management, and observability.
+
+- Demonstrate real-world use cases: Showcase AWS DevOps tools through demos and case studies, illustrating how these tools can be applied to various scenarios.
 
 ### Key Highlights
 
-#### Identifying the drawbacks of legacy application architecture
+#### Welcome & DevOps Mindset
 
-- Long product release cycles → Lost revenue/missed opportunities  
-- Inefficient operations → Reduced productivity, higher costs  
-- Non-compliance with security regulations → Security breaches, loss of reputation  
+- Recap of AI/ML session: A brief review of the previous session on AI/ML.
 
-#### Transitioning to modern application architecture – Microservices
+- DevOps culture and principles: Introduction to the cultural shift towards collaboration, automation, and continuous delivery.
 
-Migrating to a modular system — each function is an **independent service** communicating via **events**, built on three core pillars:
+- Benefits and key metrics: Overview of key DevOps metrics such as DORA (DevOps Research and Assessment), MTTR (Mean Time to Recovery), and deployment frequency. 
 
-- **Queue Management**: Handle asynchronous tasks  
-- **Caching Strategy**: Optimize performance  
-- **Message Handling**: Flexible inter-service communication  
+#### AWS DevOps Services – CI/CD Pipeline
 
-#### Domain-Driven Design (DDD)
+- Source Control: Introduction to AWS CodeCommit and Git strategies like GitFlow and Trunk-based development.
 
-- **Four-step method**: Identify domain events → arrange timeline → identify actors → define bounded contexts  
-- **Bookstore case study**: Demonstrates real-world DDD application  
-- **Context mapping**: 7 patterns for integrating bounded contexts  
+- Build & Test: Setting up AWS CodeBuild for automated builds and testing in CI/CD pipelines.
 
-#### Event-Driven Architecture
+- Deployment: Learn about AWS CodeDeploy, with strategies for Blue/Green, Canary, and Rolling updates.
 
-- **3 integration patterns**: Publish/Subscribe, Point-to-point, Streaming  
-- **Benefits**: Loose coupling, scalability, resilience  
-- **Sync vs async comparison**: Understanding the trade-offs  
+- Orchestration: AWS CodePipeline for automating the CI/CD pipeline from source to deployment.
 
-#### Compute Evolution
+- Demo: Full walkthrough of a complete CI/CD pipeline setup using AWS services. 
 
-- **Shared Responsibility Model**: EC2 → ECS → Fargate → Lambda  
-- **Serverless benefits**: No server management, auto-scaling, pay-for-value  
-- **Functions vs Containers**: Criteria for appropriate choice  
+#### Infrastructure as Code (IaC)
 
-#### Amazon Q Developer
+- AWS CloudFormation: Overview of CloudFormation templates, stacks, and drift detection to manage infrastructure as code.
 
-- **SDLC automation**: From planning to maintenance  
-- **Code transformation**: Java upgrade, .NET modernization  
-- **AWS Transform agents**: VMware, Mainframe, .NET migration  
+- AWS CDK (Cloud Development Kit): Introduction to the AWS CDK, with reusable patterns and language support.
 
-### Key Takeaways
+- Demo: Deploying infrastructure using CloudFormation and CDK.
 
-#### Design Mindset
+- Discussion: Choosing between CloudFormation and CDK for IaC implementation. 
 
-- **Business-first approach**: Always start from the business domain, not the technology  
-- **Ubiquitous language**: Importance of a shared vocabulary between business and tech teams  
-- **Bounded contexts**: Identifying and managing complexity in large systems  
+#### Container Services on AWS
 
-#### Technical Architecture
+- Docker Fundamentals: An introduction to Docker, microservices, and containerization.
 
-- **Event storming technique**: Practical method for modeling business processes  
-- Use **event-driven communication** instead of synchronous calls  
-- **Integration patterns**: When to use sync, async, pub/sub, streaming  
-- **Compute spectrum**: Criteria for choosing between VM, containers, and serverless  
+- Amazon ECR: Learn about Elastic Container Registry (ECR) for image storage, scanning, and lifecycle policies.
 
-#### Modernization Strategy
+- Amazon ECS & EKS: Explore deployment strategies, scaling, and orchestration with Elastic Container Service (ECS) and Elastic Kubernetes Service (EKS).
 
-- **Phased approach**: No rushing — follow a clear roadmap  
-- **7Rs framework**: Multiple modernization paths depending on the application  
-- **ROI measurement**: Cost reduction + business agility  
+- AWS App Runner: Simplified container deployment using AWS App Runner.
 
-### Applying to Work
+- Demo & Case Study: Comparison of microservices deployment using ECS, EKS, and App Runner.
 
-- **Apply DDD** to current projects: Event storming sessions with business teams  
-- **Refactor microservices**: Use bounded contexts to define service boundaries  
-- **Implement event-driven patterns**: Replace some sync calls with async messaging  
-- **Adopt serverless**: Pilot AWS Lambda for suitable use cases  
-- **Try Amazon Q Developer**: Integrate into the dev workflow to boost productivity  
+#### Monitoring & Observability
 
-### Event Experience
+- CloudWatch: Setup and usage of AWS CloudWatch for metrics, logs, alarms, and dashboards.
 
-Attending the **“GenAI-powered App-DB Modernization”** workshop was extremely valuable, giving me a comprehensive view of modernizing applications and databases using advanced methods and tools. Key experiences included:
+- AWS X-Ray: Introduction to AWS X-Ray for distributed tracing and performance insights across microservices.
 
-#### Learning from highly skilled speakers
-- Experts from AWS and major tech organizations shared **best practices** in modern application design.  
-- Through real-world case studies, I gained a deeper understanding of applying **DDD** and **Event-Driven Architecture** to large projects.  
+- Demo: Full-stack observability setup with CloudWatch and X-Ray for monitoring application health.
 
-#### Hands-on technical exposure
-- Participating in **event storming** sessions helped me visualize how to **model business processes** into domain events.  
-- Learned how to **split microservices** and define **bounded contexts** to manage large-system complexity.  
-- Understood trade-offs between **synchronous and asynchronous communication** and integration patterns like **pub/sub, point-to-point, streaming**.  
+- Best Practices: Tips on alerting, dashboard setup, and creating effective on-call processes.
 
-#### Leveraging modern tools
-- Explored **Amazon Q Developer**, an AI tool for SDLC support from planning to maintenance.  
-- Learned to **automate code transformation** and pilot serverless with **AWS Lambda** to improve productivity.  
+#### DevOps Best Practices & Case Studies
 
-#### Networking and discussions
-- The workshop offered opportunities to exchange ideas with experts, peers, and business teams, enhancing the **ubiquitous language** between business and tech.  
-- Real-world examples reinforced the importance of the **business-first approach** rather than focusing solely on technology.  
+- Deployment Strategies: Discuss advanced deployment strategies such as Feature flags and A/B testing for better control over application release.
 
-#### Lessons learned
-- Applying DDD and event-driven patterns reduces **coupling** while improving **scalability** and **resilience**.  
-- Modernization requires a **phased approach** with **ROI measurement**; rushing the process can be risky.  
-- AI tools like Amazon Q Developer can significantly **boost productivity** when integrated into the current workflow.  
+- Automated Testing and CI/CD Integration: How to integrate automated testing into your CI/CD pipelines for efficient testing and deployment.
 
-#### Some event photos
-*Add your event photos here*  
+- Incident Management and Postmortems: Best practices for handling incidents and conducting postmortem analyses to prevent future issues.
 
-> Overall, the event not only provided technical knowledge but also helped me reshape my thinking about application design, system modernization, and cross-team collaboration.
+- Case Studies: Real-world examples of DevOps transformations in both startups and enterprises.
+
+#### Q&A & Wrap-up
+
+- DevOps Career Pathways: Discuss various career opportunities in the DevOps field and how to develop the necessary skills.
+
+- AWS Certification Roadmap: Overview of AWS certifications related to DevOps and how to prepare for them.
+
+### What I Learned
+
+#### DevOps Culture and Principles:
+
+- DevOps Mindset: The importance of collaboration between development and operations teams, fostering a culture of continuous improvement.
+
+- Key Metrics: Understanding of DORA, MTTR, and deployment frequency as measures of DevOps success and efficiency.
+
+#### CI/CD Pipeline with AWS:
+
+- AWS CodeCommit: Best practices for managing source code using AWS’s version control system.
+
+- CodeBuild & CodeDeploy: How to configure automated build and deployment pipelines with AWS tools.
+
+- CodePipeline Automation: The role of AWS CodePipeline in automating the entire software delivery lifecycle.
+
+#### Infrastructure as Code (IaC):
+
+- AWS CloudFormation vs CDK: The benefits of using CloudFormation for managing resources declaratively, compared to the flexibility of AWS CDK for more programmatic infrastructure management.
+
+#### Containerization on AWS:
+
+- ECR, ECS, and EKS: How to manage container images and deploy containerized applications at scale using AWS services.
+
+- AWS App Runner: The ease of deploying applications using AWS App Runner for simpler containerization needs.
+
+#### Monitoring and Observability:
+
+- CloudWatch & X-Ray: How to implement full-stack observability in a microservices architecture using AWS CloudWatch and X-Ray for better performance tracking and issue resolution.
+
+### Application to My Work
+
+- CI/CD Pipeline Setup: Implement a full CI/CD pipeline using AWS CodePipeline, CodeBuild, and CodeDeploy to automate the deployment process in my current projects.
+
+- IaC with AWS CDK: Use AWS CDK for creating reusable infrastructure patterns and simplifying the management of cloud resources in my organization.
+
+- Containerization with ECS & EKS: Deploy microservices using ECS and EKS, focusing on scaling and orchestration for better efficiency.
+
+- Implement Observability: Set up CloudWatch and X-Ray for monitoring the health of applications in production and use insights to improve performance.
+
+### Experience at the Event
+
+- Learning from Experts: The speakers shared in-depth knowledge about DevOps principles, AWS DevOps tools, and real-world case studies, which helped me understand the implementation of DevOps practices in various environments.
+
+- Hands-on Demos: Participating in live demos and walking through the setup of CI/CD pipelines, IaC deployment, and container orchestration gave me practical insights into implementing these tools in my work.
+
+- Networking and Collaboration: The event allowed me to network with fellow professionals, exchange experiences, and gain insights into how other teams are implementing DevOps at scale.
+
+### Conclusion
+
+The “DevOps on AWS” event provided valuable insights into the world of DevOps and how AWS services can facilitate the implementation of modern software development practices. From automating the CI/CD pipeline to managing infrastructure as code, the event covered essential tools and strategies that can be applied directly to my work. I am excited to integrate these practices into my daily workflow to enhance automation, efficiency, and collaboration within my team.
