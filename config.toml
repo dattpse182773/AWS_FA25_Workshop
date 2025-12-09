@@ -1,4 +1,4 @@
-baseURL = " https://dattpse182773.github.io/AWS_FA25_Workshop/"
+baseURL = "https://dattpse182773.github.io/AWS_FA25_Workshop/"
 relativeURLs = true
 canonifyURLs = true
 
