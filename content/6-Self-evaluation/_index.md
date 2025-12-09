@@ -30,7 +30,7 @@ To objectively reflect on my internship period, I would like to evaluate myself 
 | 9   | **Professional conduct**            | Respecting colleagues, partners, and the work environment                                        | ✅    | ☐    | ☐       |
 | 10  | **Problem-solving skills**          | Identifying problems, proposing solutions, and showing creativity                                | ☐    | ✅    | ☐       |
 | 11  | **Contribution to project/team**    | Work effectiveness, innovative ideas, recognition from the team                                  | ✅    | ☐    | ☐       |
-| 12  | **Overall**                         | General evaluation of the entire internship period                                               |  ☐   |  ✅   | ☐       |
+| 12  | **Overall**                         | General evaluation of the entire internship period                                               |  ✅   |  ☐   | ☐       |
 
 ### Needs Improvement
 
